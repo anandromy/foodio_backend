@@ -112,23 +112,6 @@ export const updateMyRestaurant = async(req: Request, res: Response) => {
     }
 }
 
-const uploadImage = (dataURI: string) => {
-    return new Promise((resolve, reject) => {
-        imagekit.upload({
-            file: dataURI, // required
-            fileName: "updated_image", // required
-        }, function (error, result) {
-            if (error) {
-                console.log(error);
-                reject(error); // Reject the promise if there is an error
-            } else {
-                restaurant.imageUrl = result?.url as string;
-                resolve(result?.url); // Resolve the promise with the result
-            }
-        });
-    });
-};
-
 
 export default {
     createMyRestaurant,
