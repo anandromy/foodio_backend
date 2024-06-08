@@ -86,31 +86,23 @@ export const updateMyRestaurant = async(req: Request, res: Response) => {
             const image = req.file as Express.Multer.File
             const base64Image = Buffer.from(image.buffer).toString("base64")
             const dataURI = `data:${image.mimetype};base64,${base64Image}`
-            imagekit.upload({
-                file : dataURI, //required
-                fileName : "test_image",   //required
-                extensions: [
-                    {
-                        name: "google-auto-tagging",
-                        maxTags: 5,
-                        minConfidence: 95
-                    }
-                ],
-                transformation: {
-                    pre: 'l-text,i-Imagekit,fs-50,l-end',
-                    post: [
-                        {
-                            type: 'transformation',
-                            value: 'w-100'
+            const uploadImage = () => {
+                return new Promise((resolve, reject) => {
+                    imagekit.upload({
+                        file: dataURI, // required
+                        fileName: "updated_image", // required
+                    }, function (error, result) {
+                        if (error) {
+                            console.log(error);
+                            reject(error); // Reject the promise if there is an error
+                        } else {
+                            restaurant.imageUrl = result?.url as string;
+                            resolve(result?.url); // Resolve the promise with the result
                         }
-                    ]
-                }
-            }, async function(error, result) {
-                if(error) console.log(error);
-                else{
-                    restaurant.imageUrl = result?.url as string
-                }
-            });
+                    });
+                });
+            };
+            await uploadImage()
         }
         await restaurant.save()
         return res.status(200).send(restaurant)
@@ -119,6 +111,24 @@ export const updateMyRestaurant = async(req: Request, res: Response) => {
         return res.status(500).json({ message: "Something went wrong while updating restaurant" })
     }
 }
+
+const uploadImage = (dataURI: string) => {
+    return new Promise((resolve, reject) => {
+        imagekit.upload({
+            file: dataURI, // required
+            fileName: "updated_image", // required
+        }, function (error, result) {
+            if (error) {
+                console.log(error);
+                reject(error); // Reject the promise if there is an error
+            } else {
+                restaurant.imageUrl = result?.url as string;
+                resolve(result?.url); // Resolve the promise with the result
+            }
+        });
+    });
+};
+
 
 export default {
     createMyRestaurant,
