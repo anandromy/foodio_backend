@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import "dotenv/config"
 import { router as myUserRoute } from "./routes/myUserRoutes"
 import { router as myRestaurantRoute } from "./routes/myRestaurantRoutes"
+import { router as restaurantRoute } from "./routes/restaurantRoutes"
 import ImageKit from "imagekit"
 
 export let imagekit = new ImageKit({
@@ -23,6 +24,7 @@ app.get("/health", async(req, res) => {
 
 app.use("/api/my/user", myUserRoute)
 app.use("/api/my/restaurant", myRestaurantRoute)
+app.use("/api/restaurants", restaurantRoute)
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
