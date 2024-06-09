@@ -24,7 +24,7 @@ app.get("/health", async(req, res) => {
 
 app.use("/api/my/user", myUserRoute)
 app.use("/api/my/restaurant", myRestaurantRoute)
-app.use("/api/restaurants", restaurantRoute)
+app.use("/api/restaurant", restaurantRoute)
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
